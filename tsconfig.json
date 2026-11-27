@@ -9,6 +9,7 @@
     "skipLibCheck": true,
     "moduleResolution": "node16",
     "types": ["node"],
+    "rootDir": ".",
     "outDir": "dist"
   },
   "include": ["src/**/*", "tests/**/*"],
