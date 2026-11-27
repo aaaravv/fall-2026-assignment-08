@@ -9,12 +9,29 @@ app.get('/health', function (_, res) {
   res.sendStatus(200);
 });
 
+function parseOperands(req: express.Request): { a: number; b: number } | null {
+  const { a, b } = req.query;
+  if (a === undefined || b === undefined || a === '' || b === '') {
+    return null;
+  }
+  const numA = Number(a);
+  const numB = Number(b);
+  if (isNaN(numA) || isNaN(numB)) {
+    return null;
+  }
+  return { a: numA, b: numB };
+}
+
 // TODO: Implement the add endpoint
 // - Accept two query parameters: `a` and `b`
 // - Return JSON: { result: <sum of a and b> }
 // - If either `a` or `b` is missing or not a valid number, return 400: { error: 'Invalid operands' }
 app.get('/api/v1/add', function (req, res) {
-  res.status(501).json({ error: 'Not implemented' });
+  const operands = parseOperands(req);
+  if (!operands) {
+    return res.status(400).json({ error: 'Invalid operands' });
+  }
+  res.json({ result: operands.a + operands.b });
 });
 
 // TODO: Implement the subtract endpoint
@@ -22,7 +39,11 @@ app.get('/api/v1/add', function (req, res) {
 // - Return JSON: { result: <a minus b> }
 // - If either `a` or `b` is missing or not a valid number, return 400: { error: 'Invalid operands' }
 app.get('/api/v1/subtract', function (req, res) {
-  res.status(501).json({ error: 'Not implemented' });
+  const operands = parseOperands(req);
+  if (!operands) {
+    return res.status(400).json({ error: 'Invalid operands' });
+  }
+  res.json({ result: operands.a - operands.b });
 });
 
 // TODO: Implement the multiply endpoint
@@ -30,7 +51,11 @@ app.get('/api/v1/subtract', function (req, res) {
 // - Return JSON: { result: <product of a and b> }
 // - If either `a` or `b` is missing or not a valid number, return 400: { error: 'Invalid operands' }
 app.get('/api/v1/multiply', function (req, res) {
-  res.status(501).json({ error: 'Not implemented' });
+  const operands = parseOperands(req);
+  if (!operands) {
+    return res.status(400).json({ error: 'Invalid operands' });
+  }
+  res.json({ result: operands.a * operands.b });
 });
 
 // TODO: Implement the divide endpoint
@@ -39,5 +64,12 @@ app.get('/api/v1/multiply', function (req, res) {
 // - If either `a` or `b` is missing or not a valid number, return 400: { error: 'Invalid operands' }
 // - If `b` is 0, return 400: { error: 'Division by zero' }
 app.get('/api/v1/divide', function (req, res) {
-  res.status(501).json({ error: 'Not implemented' });
+  const operands = parseOperands(req);
+  if (!operands) {
+    return res.status(400).json({ error: 'Invalid operands' });
+  }
+  if (operands.b === 0) {
+    return res.status(400).json({ error: 'Division by zero' });
+  }
+  res.json({ result: operands.a / operands.b });
 });
